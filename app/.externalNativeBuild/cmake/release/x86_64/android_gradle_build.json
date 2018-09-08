@@ -1,0 +1,38 @@
+
+{
+	"buildFiles" : [ "D:/android_studio/ScanBLE/app/CMakeLists.txt" ],
+	"cleanCommands" : 
+	[
+		"F:\\android\\android-sdk\\cmake\\3.6.4111459\\bin\\cmake.exe --build D:\\android_studio\\ScanBLE\\app\\.externalNativeBuild\\cmake\\release\\x86_64 --target clean"
+	],
+	"cppFileExtensions" : [ "cpp" ],
+	"libraries" : 
+	{
+		"native-lib-Release-x86_64" : 
+		{
+			"abi" : "x86_64",
+			"artifactName" : "native-lib",
+			"buildCommand" : "F:\\android\\android-sdk\\cmake\\3.6.4111459\\bin\\cmake.exe --build D:\\android_studio\\ScanBLE\\app\\.externalNativeBuild\\cmake\\release\\x86_64 --target native-lib",
+			"buildType" : "release",
+			"files" : 
+			[
+				
+				{
+					"flags" : "  --target=x86_64-none-linux-android --gcc-toolchain=F:/android/android-sdk/ndk-bundle/toolchains/x86_64-4.9/prebuilt/windows-x86_64 --sysroot=F:/android/android-sdk/ndk-bundle/sysroot  -Dnative_lib_EXPORTS -isystem F:\\android\\android-sdk\\ndk-bundle\\sources\\cxx-stl\\llvm-libc++\\include -isystem F:\\android\\android-sdk\\ndk-bundle\\sources\\android\\support\\include -isystem F:\\android\\android-sdk\\ndk-bundle\\sources\\cxx-stl\\llvm-libc++abi\\include  -isystem F:/android/android-sdk/ndk-bundle/sysroot/usr/include/x86_64-linux-android -D__ANDROID_API__=21 -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -Wa,--noexecstack -Wformat -Werror=format-security -std=c++11 -std=c++14 -frtti -fexceptions -O2 -DNDEBUG  -fPIC    -c ",
+					"src" : "D:/android_studio/ScanBLE/app/src/main/cpp/native-lib.cpp",
+					"workingDirectory" : "D:/android_studio/ScanBLE/app/.externalNativeBuild/cmake/release/x86_64"
+				}
+			],
+			"output" : "D:/android_studio/ScanBLE/app/build/intermediates/cmake/release/obj/x86_64/libnative-lib.so",
+			"toolchain" : "2029317101"
+		}
+	},
+	"toolchains" : 
+	{
+		"2029317101" : 
+		{
+			"cCompilerExecutable" : "F:/android/android-sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/bin/clang.exe",
+			"cppCompilerExecutable" : "F:/android/android-sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/bin/clang++.exe"
+		}
+	}
+}

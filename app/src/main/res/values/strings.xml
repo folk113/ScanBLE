@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">SmartRF</string>
+    <string name="ble_not_supported">你的手机不支持BLE</string>
+    <string name="label_data">Data:</string>
+    <string name="label_device_address">设备地址:</string>
+    <string name="label_state">State:</string>
+    <string name="no_data">No data</string>
+    <string name="connected">已连接</string>
+    <string name="disconnected">已断开连接</string>
+    <string name="title_devices">BLE 设备扫描</string>
+    <string name="error_bluetooth_not_supported">你的手机不支持蓝牙</string>
+    <string name="unknown_device">未知设备</string>
+    <string name="unknown_characteristic">未知特征值</string>
+    <string name="unknown_service">未知服务</string>
+
+    <!-- Menu items -->
+    <string name="menu_connect">Connect</string>
+    <string name="menu_disconnect">Disconnect</string>
+    <string name="menu_scan">Scan</string>
+    <string name="menu_stop">Stop</string>
+    <string name="device_rssi">rssi信号</string>
+    <string name="text_detail">detail</string>
+    
+    <string name="connect_state">已连接设备, 当前设备具有低功耗功能，目前电流仅为1~200uA</string>
+    <string name="edit_SetDeviceName">BLE4.0-Device</string>
+    <string name="button_SetDeviceName">设置设备名</string>
+    <string name="SetDeviceName_tips">设置设备名后需要手动重启设备后才生效</string>
+    <string name="txt_temperature">温度:</string>
+    <string name="txt_humidity">湿度:</string>
+    <string name="txt_ADC0ADC1">ADC4: ?\nADC5: ?</string>
+    <string name="button_Read_ADC4ADC5">读取ADC值</string>
+    <string name="set_pwm">50607080</string>
+    <string name="pwm_text_info">拖动进度条，pwm值实时更新到单片机，单片机持续输出期间不可睡眠，直到关闭，方可睡眠，在开发板上4路pwm对应p0.6、p0.7、p1.0、p1.1，左边的两个led灯可看到pwm的效果</string>
+    <!-- <string name="start_button_SetPwm">写4通道PWM(无睡眠 约8mA电流)</string>
+    <string name="stop_button_SetPwm">关闭PWM(有睡眠约200uA电流)</string> -->
+    <string name="start_button_SetPwm">写入PWM</string>
+    <string name="stop_button_SetPwm">关闭PWM</string>
+    <string name="relay">蜂鸣器</string>
+    <string name="dht11_ds18b20">通过设备轻触S1切换DHT11或DS18B20</string>
+    <string name="board_info_log">按键状态:</string>
+    <string name="voltage">电压:</string>
+
+</resources>
