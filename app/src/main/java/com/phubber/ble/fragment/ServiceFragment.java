@@ -3,8 +3,10 @@ package com.phubber.ble.fragment;
 import android.bluetooth.le.ScanResult;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.ParcelUuid;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,13 +18,17 @@ import com.phubber.ble.MarqueeView;
 import com.phubber.ble.R;
 import com.phubber.ble.common.BaseFragment;
 import com.phubber.ble.service.IBleScanResultListener;
+import com.phubber.ble.utils.ContainerManager;
+import com.phubber.ble.utils.GattInfo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
-public class ServiceFragment extends BaseFragment implements IBleScanResultListener {
+public class ServiceFragment extends BaseFragment{
     private final String TAG = ServiceFragment.class.getSimpleName();
     private BleServiceAdapter mBleServiceAdapter;
+    private ScanResult mScanResult;
     public ServiceFragment() {
         super();
     }
@@ -44,22 +50,25 @@ public class ServiceFragment extends BaseFragment implements IBleScanResultListe
         super.onViewCreated(view, savedInstanceState);
         Log.d(TAG,"onViewCreated");
         RecyclerView recyclerView = view.findViewById(R.id.service_layout_recyclerView);
-        mBleServiceAdapter = new BleServiceAdapter(getContext());
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        mBleServiceAdapter = new BleServiceAdapter(getContext(),mScanResult);
         recyclerView.setAdapter(mBleServiceAdapter);
-        recyclerView.postDelayed(new Runnable(){
-            @Override
-            public void run() {
-                getBleService().addBleScanResultListener(ServiceFragment.this);
-                getBleService().startScanBleDevice();
-            }
-        },3000);
     }
 
+    public void setScanResult(ScanResult result)
+    {
+        mScanResult = result;
+    }
 
+    public void onItemClickListener(UUID uuid)
+    {
+
+    }
 
     @Override
     public void onDestroyView() {
-        getBleService().removeBleScanResultListener(this);
         super.onDestroyView();
     }
 
@@ -68,82 +77,52 @@ public class ServiceFragment extends BaseFragment implements IBleScanResultListe
         super.onDestroy();
     }
 
-    @Override
-    public void onScanResult(int ret, List<ScanResult> results) {
-        if(ret == 0)
-        {
-            mBleServiceAdapter.updateScanResult(results);
-        }
-    }
-
-
     class BleServiceHolder extends RecyclerView.ViewHolder{
-        public TextView mTvDeviceName;
-        public TextView mTvDeviceAddr;
-        public MarqueeView mMvUuid;
-        public TextView mTvRssi;
+        public TextView mTvName;
+        public TextView mTvUuid;
+        public View mViewHolder;
         public BleServiceHolder(View itemView)
         {
             super(itemView);
-            mTvDeviceName = itemView.findViewById(R.id.device_name);
-            mTvDeviceAddr = itemView.findViewById(R.id.device_address);
-            mMvUuid = itemView.findViewById(R.id.device_beacon_uuid);
-            mTvRssi = itemView.findViewById(R.id.device_txPower_rssi);
+            mViewHolder = itemView;
+            mTvName = itemView.findViewById(R.id.service_list_item_name);
+            mTvUuid = itemView.findViewById(R.id.service_list_item_uuid);
         }
     }
-    private class BleServiceAdapter extends RecyclerView.Adapter{
+
+    private class BleServiceAdapter extends RecyclerView.Adapter<BleServiceHolder> implements View.OnClickListener {
         private Context mContext;
-        private ArrayList<ScanResult> mScanResults = new ArrayList<ScanResult>();
-        public BleServiceAdapter(Context context)
+        private ScanResult mScanResult;
+        public BleServiceAdapter(Context context,ScanResult result)
         {
             mContext = context;
-        }
-
-        public void updateScanResult(List<ScanResult> results)
-        {
-            for(ScanResult newIn :results)
-            {
-                boolean isExist = false;
-                for(ScanResult old:mScanResults)
-                {
-                    if(newIn.getDevice().getAddress().equals(old.getDevice().getAddress()))
-                    {
-                       int index =  mScanResults.indexOf(old);
-                       mScanResults.remove(old);
-                       mScanResults.add(index,newIn);
-                        isExist = true;
-                       break;
-                    }
-                }
-                if(!isExist)
-                    mScanResults.add(newIn);
-            }
-            notifyDataSetChanged();
+            mScanResult = result;
         }
 
         @NonNull
         @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View itemView = LayoutInflater.from(mContext).inflate(R.layout.listitem_device,parent);
+        public BleServiceHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View itemView = LayoutInflater.from(mContext).inflate(R.layout.service_list_item,parent,false);
             return new BleServiceHolder(itemView);
         }
 
-
         @Override
-        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-            BleServiceHolder _holder = (BleServiceHolder)holder;
-            ScanResult result = mScanResults.get(position);
-            _holder.mTvDeviceName.setText(result.getDevice().getName());
+        public void onBindViewHolder(@NonNull BleServiceHolder holder, int position) {
+            ParcelUuid uuid = mScanResult.getScanRecord().getServiceUuids().get(position);
+            holder.mTvName.setText(GattInfo.uuidToName(uuid.getUuid()));
+            holder.mTvUuid.setText(uuid.getUuid().toString());
+            holder.mViewHolder.setOnClickListener(this);
+            holder.mViewHolder.setTag(uuid.getUuid());
         }
 
         @Override
         public int getItemCount() {
-            return mScanResults.size();
+            return mScanResult.getScanRecord().getServiceUuids().size();
         }
 
         @Override
-        public long getItemId(int position) {
-            return position;
+        public void onClick(View v) {
+            ServiceFragment.this.onItemClickListener((UUID)v.getTag());
         }
     }
 }

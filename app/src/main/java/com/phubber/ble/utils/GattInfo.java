@@ -55,6 +55,7 @@ package com.phubber.ble.utils;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.XmlResourceParser;
+import android.text.TextUtils;
 
 import com.phubber.ble.R;
 
@@ -106,7 +107,8 @@ public class GattInfo {
 
   public static String uuidToName(UUID uuid) {
     String str = toShortUuidStr(uuid);
-    return uuidToName(str.toUpperCase(Locale.ENGLISH));
+    String ret = uuidToName(str.toUpperCase(Locale.ENGLISH));
+    return TextUtils.isEmpty(ret)?"Unknow":ret;
   }
   
   public static String uuidToIcon(UUID uuid) {
@@ -147,11 +149,11 @@ public class GattInfo {
   }
 
   private static String uuidToName(String uuidStr16) {
-    return mNameMap.get(uuidStr16);
+    return mNameMap.get(uuidStr16.toLowerCase());
   }
   
   private static String uuidToIcon(String uuidStr16) {
-	  return mIconMap.get(uuidStr16);
+	  return mIconMap.get(uuidStr16.toLowerCase());
   }
 
   //

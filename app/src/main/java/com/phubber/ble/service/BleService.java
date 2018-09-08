@@ -30,6 +30,8 @@ import android.os.IBinder;
 import android.os.Message;
 import android.util.Log;
 
+import com.phubber.ble.utils.GattInfo;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -49,6 +51,7 @@ public class BleService extends Service implements Handler.Callback {
     private HandlerThread mHandlerThread = new HandlerThread("BleServiceThread");
     private final int MSG_BLE_START_SCAN_DEVICE = 1000;
     private final int MSG_BLE_STOP_SCAN_DEVICE = 1001;
+    private final int MSG_BLE_PARCEL_GATTINFO =  1002;
 
     @Override
     public void onCreate() {
@@ -57,6 +60,7 @@ public class BleService extends Service implements Handler.Callback {
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         mHandlerThread.start();
         mHandler = new Handler(mHandlerThread.getLooper(), this);
+        mHandler.sendEmptyMessage(MSG_BLE_PARCEL_GATTINFO);
     }
 
     @Override
@@ -119,6 +123,9 @@ public class BleService extends Service implements Handler.Callback {
     public boolean handleMessage(Message msg) {
         Log.d(TAG,"handleMessage msg:"+msg);
         switch (msg.what) {
+            case MSG_BLE_PARCEL_GATTINFO:
+                GattInfo.getInstance(getApplicationContext());
+                break;
             case MSG_BLE_START_SCAN_DEVICE:
                 _startScanBleDevice();
                 break;

@@ -9,12 +9,28 @@ import com.phubber.ble.R;
 public class ContainerManager {
 	private FragmentManager mFragmentManager;
 
-	public ContainerManager(FragmentManager manager) {
+	private static ContainerManager mInstance;
+
+	public static ContainerManager getInstance()
+	{
+		return mInstance;
+	}
+
+	public static ContainerManager getInstance(FragmentManager manager)
+	{
+		if(mInstance == null)
+		{
+			mInstance = new ContainerManager(manager);
+		}
+		return mInstance;
+	}
+
+	private ContainerManager(FragmentManager manager) {
 		mFragmentManager = manager;
 	}
 
-	public void add(Fragment fragment) {
-		add(R.id.frame_main, fragment, false);
+	public void add(Fragment fragment,boolean addToBackStack) {
+		add(R.id.frame_main, fragment, addToBackStack);
 	}
 
 	public void replace(Fragment oldFragment, Fragment newFragment) {
@@ -41,12 +57,12 @@ public class ContainerManager {
 				.commitAllowingStateLoss();
 	}
 	
-	private void hide(int container, Fragment fragment)
+	public void hide(Fragment fragment)
 	{
 		mFragmentManager.beginTransaction().hide(fragment)
 		.commitAllowingStateLoss();
 	}
-	private void show(int container, Fragment fragment)
+	public void show(Fragment fragment)
 	{
 		mFragmentManager.beginTransaction().show(fragment)
 		.commitAllowingStateLoss();
