@@ -29,6 +29,12 @@ public class ContainerManager {
 		mFragmentManager = manager;
 	}
 
+	public Fragment getFragmentByTag(String tag)
+    {
+        Fragment old = mFragmentManager.findFragmentByTag(tag);
+        return old;
+    }
+
 	public void add(Fragment fragment,boolean addToBackStack) {
 		add(R.id.frame_main, fragment, addToBackStack);
 	}
@@ -38,25 +44,47 @@ public class ContainerManager {
 	}
 
 	private void add(int container, Fragment fragment, boolean addToBackStack) {
-		FragmentTransaction transaction = mFragmentManager.beginTransaction();
-		transaction.add(container, fragment);
+        FragmentTransaction transaction = mFragmentManager.beginTransaction();
 		if (addToBackStack)
-			transaction.addToBackStack(fragment.getClass().getSimpleName());
-		transaction.commitAllowingStateLoss();
+		{
+			transaction.replace(container, fragment);
+			transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+			transaction.addToBackStack(null);
+		}
+		else
+		{
+			boolean isAdded = false;
+			for(Fragment frag:mFragmentManager.getFragments()) {
+				if(frag.getClass().equals(fragment.getClass()))
+				{
+					isAdded = true;
+					break;
+				}
+			}
+			if(!isAdded)
+				transaction.add(container, fragment);
+		}
+		transaction.commit();
 	}
 
+	public void remove(Fragment fragment)
+	{
+		FragmentTransaction transaction = mFragmentManager.beginTransaction();
+		transaction.remove(fragment);
+		transaction.commitAllowingStateLoss();
+	}
 	/**
 	 * @param oldFragment
 	 * @param newFragment
 	 */
 	private void replace(int container, Fragment oldFragment,
 			Fragment newFragment) {
-		mFragmentManager.beginTransaction().remove(oldFragment)
-				.add(container, newFragment)
-				.addToBackStack(newFragment.getClass().getSimpleName())
-				.commitAllowingStateLoss();
+		mFragmentManager.beginTransaction()
+				.replace(container, newFragment)
+//				.addToBackStack(newFragment.getClass().getSimpleName())
+				.commit();
 	}
-	
+
 	public void hide(Fragment fragment)
 	{
 		mFragmentManager.beginTransaction().hide(fragment)
@@ -66,5 +94,10 @@ public class ContainerManager {
 	{
 		mFragmentManager.beginTransaction().show(fragment)
 		.commitAllowingStateLoss();
+	}
+	//context变了，重启后所有跟context相关联的资源都要重新获取
+	public void release()
+	{
+		mInstance = null;
 	}
 }
